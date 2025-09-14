@@ -7,16 +7,12 @@
   <meta name="theme-color" content="#BBA5E3" />
   <style>
     :root{
-      --ink:#333;               /* dark grey text everywhere */
-      --muted:#666;
-      --card:#fff;
-      --lilac:#BBA5E3;          /* YES */
-      --blush:#F7A8B8;          /* NO */
-      --baby:#A8D8F0;           /* MAYBE */
-      --lav:#9C8ADE;            /* submit + accents */
-      --toast:#E8DFF5;          /* lavender toast */
-      --shadow:0 14px 34px rgba(23,16,54,.10);
-      --radius:22px;
+      --ink:#333; --muted:#666; --card:#fff;
+      --lilac:#BBA5E3; --blush:#F7A8B8; --baby:#A8D8F0; --lav:#9C8ADE;
+      --toast:#E8DFF5; --shadow:0 14px 34px rgba(23,16,54,.10); --radius:22px;
+      --good:#10b981; --warn:#f59e0b; --bad:#ef4444;
+      --border:#e5e7eb;
+      --bar-start:#8b7be0; --bar-end:#b8a7ff;
     }
     *{box-sizing:border-box}
     html,body{margin:0;padding:0}
@@ -30,21 +26,13 @@
       min-height:100vh;
     }
     .container{max-width:1000px;margin:0 auto;padding:18px 16px 140px; position:relative; z-index:1}
-    /* Hero */
-    .hero{
-      background: linear-gradient(135deg, #ede7ff 0%, #d3fff3 100%);
-      border-radius:28px;
-      padding:26px 18px 20px;
-      text-align:center;
-      box-shadow:var(--shadow);
-    }
+    .hero{ background: linear-gradient(135deg, #ede7ff 0%, #d3fff3 100%); border-radius:28px; padding:26px 18px 20px; text-align:center; box-shadow:var(--shadow); }
     .hero h1{margin:4px 0 1rem; font-size:clamp(1.6rem, 3.5vw, 2.3rem); line-height:1.18;}
     #hiName{font-weight:800;opacity:.95;margin:0 0 10px; font-size:1.4rem}
     .tagline{margin:0 auto 10px; max-width:44ch; font-size:1.06rem}
     .hero-photo-wrap{background:rgba(255,255,255,.85); border:1px solid rgba(255,255,255,.6);
       border-radius:20px; padding:10px; margin-top:12px; box-shadow:var(--shadow)}
     .hero-photo{width:100%; height:auto; display:block; border-radius:14px; object-fit:contain; background:#f5f7ff;}
-    /* Grid: details + gif */
     .details-grid{display:grid; grid-template-columns:1fr; gap:16px; margin-top:16px}
     @media (min-width:860px){ .details-grid{ grid-template-columns: 1.8fr .9fr; } }
     .section{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
@@ -55,81 +43,63 @@
     .info-note li{margin:8px 0}
     .btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:12px}
     .btn{
-      appearance:none; border:none; cursor:pointer; background:#fff;
-      color:var(--ink); font-weight:800; border-radius:14px; padding:12px 16px; display:inline-flex; align-items:center; gap:10px;
-      box-shadow:var(--shadow); text-decoration:none; transition: transform .08s ease;
+      appearance:none; border:none; cursor:pointer; background:#fff; color:var(--ink); font-weight:800; border-radius:14px; padding:12px 16px;
+      display:inline-flex; align-items:center; gap:10px; box-shadow:var(--shadow); text-decoration:none; transition: transform .08s ease;
     }
     .btn:active{ transform: translateY(1px) scale(.99) }
     .gif-card{ border-radius:22px; padding:12px; background:linear-gradient(180deg,#fff,#f9ffff); box-shadow:var(--shadow);
       display:flex; align-items:center; justify-content:center; }
     .gif{width:100%; height:auto; display:block; border-radius:16px;}
     .map{border-radius:18px; overflow:hidden; box-shadow:var(--shadow); margin-top:12px}
-    /* RSVP */
-    .choices{display:none} /* hide legacy links if present */
+    .choices{display:none}
     .rsvp-wrap{ margin-top: 6px; }
     .rsvp-options{ display:grid; grid-template-columns:1fr; gap:10px; }
     @media (min-width:600px){ .rsvp-options{ grid-template-columns:repeat(3,1fr);} }
     .rsvp-btn{
-      appearance:none; border:none; cursor:pointer;
-      padding:14px 18px; border-radius:999px;
-      font-weight:800; color:var(--ink);
-      box-shadow:0 8px 20px rgba(0,0,0,.08);
-      transition:transform .08s ease, filter .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
-      text-align:center; min-width:160px;
-      border:2px solid transparent;
+      appearance:none; border:none; cursor:pointer; padding:14px 18px; border-radius:999px; font-weight:800; color:var(--ink);
+      box-shadow:0 8px 20px rgba(0,0,0,.08); transition:transform .08s ease, filter .15s ease, box-shadow .15s ease, background .15s ease, border-color .15s ease;
+      text-align:center; min-width:160px; border:2px solid transparent;
     }
     .rsvp-btn[data-choice="YES"]{ background:var(--lilac); }
     .rsvp-btn[data-choice="NO"]{ background:var(--blush); }
     .rsvp-btn[data-choice="MAYBE"]{ background:var(--baby); }
     .rsvp-btn:hover{ filter:brightness(.96); box-shadow:0 12px 26px rgba(0,0,0,.12); }
-    .rsvp-btn.selected{
-      filter:brightness(.93);
-      border-color: rgba(0,0,0,.25);
-    }
-    #submitRSVP{
-      margin-top:12px; padding:12px 18px; border-radius:12px; border:none;
-      background:var(--lav); color:var(--ink); font-weight:900; cursor:pointer;
-      box-shadow:0 8px 22px rgba(0,0,0,.12);
-    }
+    .rsvp-btn.selected{ filter:brightness(.93); border-color: rgba(0,0,0,.25); background:#F7D774 !important; border-color:#bfa52a !important; box-shadow:0 12px 28px rgba(0,0,0,.16) !important; transform: translateY(-1px) scale(1.02) !important; }
+    #submitRSVP{ margin-top:12px; padding:12px 18px; border-radius:12px; border:none; background:var(--lav); color:var(--ink); font-weight:900; cursor:pointer; box-shadow:0 8px 22px rgba(0,0,0,.12); }
     #submitRSVP:hover{ filter:brightness(.96) }
     #rsvpAck{ margin-top:10px; font-weight:700; text-align:center }
-    /* Allergy button match */
-    #saveAllergy{
-      background:var(--lav); color:var(--ink); border:none;
-      padding:10px 14px; border-radius:12px; font-weight:800;
-      box-shadow:0 6px 18px rgba(0,0,0,.10);
-    }
-    textarea{ width:100%; min-height:96px; border:1px solid #e6e6f0; border-radius:14px; padding:12px; font-size:1rem;
-      background:linear-gradient(180deg,#fff,#fbfbff); color:var(--ink); }
-    /* Music button */
+    #saveAllergy{ background:var(--lav); color:var(--ink); border:none; padding:10px 14px; border-radius:12px; font-weight:800; box-shadow:0 6px 18px rgba(0,0,0,.10); }
+    textarea{ width:100%; min-height:96px; border:1px solid var(--border); border-radius:14px; padding:12px; font-size:1rem; background:linear-gradient(180deg,#fff,#fbfbff); color:var(--ink); }
     #musicBtn {position:fixed;right:14px;bottom:14px;z-index:40;padding:10px 12px;border:0;border-radius:999px;font-weight:800;background:#fff;box-shadow:0 8px 22px rgba(0,0,0,.12); color:var(--ink);}
-    /* Toast popup ("Cali says") */
-    .toast{
-      position:fixed; left:50%; bottom:14px; transform:translate(-50%, 30px);
-      background:var(--toast); color:var(--ink);
-      border-radius:16px; box-shadow:0 14px 34px rgba(0,0,0,.18);
-      padding:12px 14px; display:flex; align-items:center; gap:10px; z-index:50;
-      opacity:0; pointer-events:none;
-      animation: toast-in .28s ease forwards;
-    }
+    .toast{ position:fixed; left:50%; bottom:14px; transform:translate(-50%, 30px); background:var(--toast); color:var(--ink); border-radius:16px; box-shadow:0 14px 34px rgba(0,0,0,.18); padding:12px 14px; display:flex; align-items:center; gap:10px; z-index:50; opacity:0; pointer-events:none; animation: toast-in .28s ease forwards; }
     .toast.hide{ animation: toast-out .25s ease forwards; }
     .toast img{ width:28px; height:28px; border-radius:8px }
     @keyframes toast-in{ from{opacity:0; transform:translate(-50%, 30px)} to{opacity:1; transform:translate(-50%, 0)} }
     @keyframes toast-out{ from{opacity:1; transform:translate(-50%, 0)} to{opacity:0; transform:translate(-50%, 30px)} }
-  
-/* === RSVP stronger selected state + gold === */
-.rsvp-btn.selected{
-  background:#F7D774 !important;     /* gold */
-  border-color:#bfa52a !important;
-  box-shadow:0 12px 28px rgba(0,0,0,.16) !important;
-  transform: translateY(-1px) scale(1.02) !important;
-}
 
-</style>
+    /* Who's coming dropdown */
+    .attending{margin-top:14px}
+    .attend-toggle{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:12px 14px; border-radius:14px;
+      background:linear-gradient(135deg,var(--bar-start),var(--bar-end));
+      color:#fff; font-weight:800; cursor:pointer; user-select:none;
+      box-shadow:0 8px 20px rgba(129,117,228,.25); border:1px solid rgba(255,255,255,.35);
+    }
+    .attend-toggle .count{opacity:.95; font-weight:700; font-size:.95rem}
+    .attend-toggle .arrow{transition:transform .2s ease}
+    .attend-toggle[aria-expanded="true"] .arrow{ transform:rotate(180deg) }
+    .attend-panel{
+      background:#fff; border:1px solid var(--border); border-radius:14px;
+      padding:12px; margin-top:8px; box-shadow:0 6px 12px rgba(0,0,0,.05);
+    }
+    .pills{display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#f9fafb}
+    .hidden{display:none}
+  </style>
 </head>
 <body>
   <div class="container">
-    <!-- HERO -->
     <section class="hero" aria-labelledby="title">
       <h1 id="title">🎂 You’re Invited to My 7th Birthday Party!</h1>
       <p id="hiName"></p>
@@ -143,7 +113,6 @@
       </div>
     </section>
 
-    <!-- Event details + GIF grid -->
     <section class="details-grid">
       <div class="section">
         <h2 id="details-heading">Event Details</h2>
@@ -165,7 +134,6 @@
           <iframe title="Map to Swiss Cottage Leisure Centre" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2483.611136410285!2d-0.1746041233010678!3d51.5441746109931!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761ac3141a5df9%3A0x85a06e1c1dc8d2d9!2sSwiss%20Cottage%20Leisure%20Centre!5e0!3m2!1sen!2suk!4v1726222337687!5m2!1sen!2suk" width="100%" height="290" style="border:0" allowfullscreen loading="lazy"></iframe>
         </div>
       </div>
-
       <aside class="gif-card" aria-label="Party vibe">
         <img class="gif" src="https://media.giphy.com/media/o0JqY89wfQUU/giphy.gif" alt="Cinnamoroll celebrating" />
       </aside>
@@ -174,7 +142,7 @@
     <!-- RSVP -->
     <section class="section" aria-labelledby="rsvp-heading">
       <h2 id="rsvp-heading">RSVP</h2>
-      <p class="note">Pick one, then press Submit 💜</p>
+      <p class="note">Pick one, write allergies (or leave blank for “None”), then press Submit 💜</p>
       <div class="rsvp-wrap">
         <div class="rsvp-options" id="rsvpOptions">
           <button class="rsvp-btn" data-choice="YES">🎉 Yes, I’ll be there!</button>
@@ -191,8 +159,22 @@
       <div class="section" style="margin-top:12px;padding:12px">
         <label for="allergyField" style="display:block;font-weight:700;margin-bottom:6px">Allergies / dietary notes</label>
         <textarea id="allergyField" placeholder="e.g., nut‑free, vegetarian, halal"></textarea>
-        <button id="saveAllergy" type="button" style="margin-top:10px">💾 Save allergies</button>
+        <div style="display:flex; gap:10px; align-items:center; margin-top:10px">
+          <button id="saveAllergy" type="button">💾 Save allergies</button>
+          <small id="allergyHint" style="color:var(--muted)">Leave blank and we’ll save <em>None</em>.</small>
+        </div>
         <p id="savedNote" class="note" style="display:none;margin-top:8px">Saved — thank you!</p>
+      </div>
+
+      <!-- Who's coming (dropdown, collapsed by default) -->
+      <div class="attending" id="attending">
+        <div class="attend-toggle" id="attendToggle" aria-expanded="false" role="button" tabindex="0">
+          <span>Who’s coming</span>
+          <span class="count"><span id="attendingCount">0</span> confirmed <span class="arrow">▼</span></span>
+        </div>
+        <div class="attend-panel hidden" id="attendPanel" aria-hidden="true">
+          <div class="pills" id="attendingList"></div>
+        </div>
       </div>
     </section>
 
@@ -201,24 +183,21 @@
     </section>
   </div>
 
-  <!-- Toast (Cali says) container -->
   <div id="toast" class="toast" style="display:none">
     <img src="https://media.giphy.com/media/o0JqY89wfQUU/giphy.gif" alt="" aria-hidden="true" />
     <span id="toastMsg"></span>
   </div>
 
-  <!-- Hidden YouTube player + music toggle -->
   <div id="yt-holder" style="position:fixed;left:-9999px;top:-9999px;width:1px;height:1px;overflow:hidden;"></div>
   <button id="musicBtn">🎵 sound on</button>
   <audio id="bgm" autoplay muted src="cali-bgm.mp3" loop preload="auto" playsinline></audio>
 
-  <!-- YouTube API -->
   <script src="https://www.youtube.com/iframe_api"></script>
 
-  <!-- Firebase + Firestore logging -->
+  <!-- Firebase + Firestore logging with validation + upserts + attending list -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, doc, setDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDtC4RvoYxotfxDyp32gjeFediehdaWrLs",
@@ -233,52 +212,135 @@
     const db = getFirestore(app);
 
     const qs = new URLSearchParams(location.search);
-    const toName = (qs.get("to") || "").trim();
+    const toNameRaw = (qs.get("to") || "").trim();
     const kids = (qs.get("kids") || "").trim();
     const adults = (qs.get("adults") || "").trim();
     const contactPrefill = (qs.get("contact") || "").trim();
     const allergiesPrefill = (qs.get("allergy") || "").trim();
 
-    // Greet by name
-    if (toName) {
-      const el = document.getElementById("hiName");
-      if (el) el.textContent = `Hi ${toName}!`;
+    function idFor(name){
+      return name.trim().toLowerCase().replace(/[\/#?\[\]]/g,'_').replace(/\s+/g,'-').slice(0,120) || "_unknown";
     }
 
-    // Log view
+    const hasName = !!toNameRaw;
+    const toNameDisplay = toNameRaw;
+    const docId = hasName ? idFor(toNameRaw) : "_unknown";
+
+    if (hasName) {
+      const el = document.getElementById("hiName");
+      if (el) el.textContent = `Hi ${toNameDisplay}!`;
+    } else {
+      const el = document.getElementById("hiName");
+      if (el) el.textContent = `Hi there!`;
+    }
+
+    // Log view (allowed without name)
     try {
       await addDoc(collection(db, "views"), {
-        to: toName || null, kids: kids || null, adults: adults || null,
+        to: hasName ? toNameDisplay : null, kids: kids || null, adults: adults || null,
         contact: contactPrefill || null, allergy: allergiesPrefill || null,
         ts: serverTimestamp(), referrer: document.referrer || null, ua: navigator.userAgent
       });
     } catch (e) { console.error("View log error:", e); }
 
-    // Save allergies
     const allergyField = document.getElementById("allergyField");
     if (allergiesPrefill) allergyField.value = allergiesPrefill;
+
+    // Toast util
+    function showToast(msg, emoji='⚠️'){
+      const t = document.getElementById('toast');
+      const msgEl = document.getElementById('toastMsg');
+      msgEl.textContent = `${emoji} ${msg}`;
+      t.style.display = 'flex';
+      t.classList.remove('hide');
+      setTimeout(()=>{ t.classList.add('hide'); setTimeout(()=>{ t.style.display='none'; }, 250); }, 3500);
+    }
+
+    // Save allergies (blocked if missing name)
     document.getElementById("saveAllergy").addEventListener("click", async ()=>{
-      const text = allergyField.value.trim();
+      if (!hasName){ showToast("This link is missing your name. Please use your personal invite link.", "🔒"); return; }
+      const text = (allergyField.value.trim() || "None");
       try{
-        await addDoc(collection(db, "allergies"), {
-          to: toName || null, kids: kids || null, adults: adults || null,
-          allergy: text || null, contact: contactPrefill || null, ts: serverTimestamp()
-        });
+        await setDoc(doc(db, "allergies", docId), {
+          to: toNameDisplay, kids: kids || null, adults: adults || null,
+          allergy: text, contact: contactPrefill || null, ts: serverTimestamp()
+        }, { merge: true });
+        allergyField.value = text;
         const n = document.getElementById("savedNote");
         n.style.display = "block"; setTimeout(()=> n.style.display="none", 2500);
       }catch(e){ alert("Could not save right now. Please try again."); }
     });
 
-    // RSVP logging helper exposed globally
-    async function logRSVP(choice) {
-      try {
-        await addDoc(collection(db, "rsvps"), {
-          to: toName || null, kids: kids || null, adults: adults || null, contact: contactPrefill || null,
-          allergy: (allergyField.value.trim() || allergiesPrefill || null), choice, ts: serverTimestamp()
-        });
-      } catch (e) { console.error("RSVP log error:", e); }
+    // Centralized submit that REQUIRES RSVP + allergy + NAME
+    async function submitWithValidation(choice){
+      if (!hasName) throw new Error("This link is missing your name. Please open your personal invite link.");
+      const allergy = (allergyField.value.trim() || "None");
+      if (!choice) throw new Error("Please choose an RSVP option.");
+      await setDoc(doc(db, "allergies", docId), {
+        to: toNameDisplay, kids: kids || null, adults: adults || null,
+        allergy, contact: contactPrefill || null, ts: serverTimestamp()
+      }, { merge: true });
+      await setDoc(doc(db, "rsvps", docId), {
+        to: toNameDisplay, kids: kids || null, adults: adults || null, contact: contactPrefill || null,
+        allergy, choice, ts: serverTimestamp()
+      }, { merge: true });
+      allergyField.value = allergy;
+      return true;
     }
-    window.__logRSVP = logRSVP;
+    window.__submitRSVPValidated = submitWithValidation;
+
+    // --- Who's coming (YES) ---
+    const attendingCountEl = document.getElementById("attendingCount");
+    const attendingList = document.getElementById("attendingList");
+    const attendToggle = document.getElementById("attendToggle");
+    const attendPanel = document.getElementById("attendPanel");
+
+    function renderAttending(names){
+      attendingCountEl.textContent = names.length.toString();
+      attendingList.innerHTML = "";
+      if (!names.length){
+        attendPanel.classList.add("hidden");
+        attendToggle.setAttribute("aria-expanded","false");
+        attendPanel.setAttribute("aria-hidden","true");
+        return;
+      }
+      const frag = document.createDocumentFragment();
+      names.forEach(n=>{
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = n;
+        frag.appendChild(span);
+      });
+      attendingList.appendChild(frag);
+    }
+
+    // Collapsed by default
+    attendToggle.addEventListener("click", ()=>{
+      const expanded = attendToggle.getAttribute("aria-expanded")==="true";
+      attendToggle.setAttribute("aria-expanded", String(!expanded));
+      attendPanel.setAttribute("aria-hidden", String(expanded));
+      attendPanel.classList.toggle("hidden");
+    });
+    attendToggle.addEventListener("keydown", (e)=>{
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); attendToggle.click(); }
+    });
+
+    // Live YES list
+    const qR = query(collection(db, "rsvps"), orderBy("ts","desc"));
+    onSnapshot(qR, (snap)=>{
+      const set = new Set();
+      snap.docs.forEach(d=>{
+        const r = d.data() || {};
+        const name = String(r.to||"").trim();
+        const choice = String(r.choice||"").toLowerCase();
+        if (name && name !== "(unknown)" && choice === "yes"){
+          set.add(name);
+        }
+      });
+      const names = Array.from(set).sort((a,b)=>a.localeCompare(b));
+      renderAttending(names);
+    });
+
   </script>
 
   <!-- Non-module JS for calendar + music + RSVP selection + toast -->
@@ -318,11 +380,7 @@ END:VCALENDAR`;
       player = new YT.Player('yt-holder', {
         height: '1', width: '1',
         videoId: 'RE1faU5OVs4',
-        playerVars: {
-          autoplay: 1, loop: 1, playlist: 'RE1faU5OVs4',
-          controls: 0, disablekb: 1, fs: 0, modestbranding: 1,
-          playsinline: 1, rel: 0, iv_load_policy: 3
-        },
+        playerVars: { autoplay: 1, loop: 1, playlist: 'RE1faU5OVs4', controls: 0, disablekb: 1, fs: 0, modestbranding: 1, playsinline: 1, rel: 0, iv_load_policy: 3 },
         events: { 'onReady': onYTReady }
       });
     }
@@ -379,102 +437,32 @@ END:VCALENDAR`;
       msgEl.textContent = `${emoji} Cali says: ${msg}`;
       t.style.display = 'flex';
       t.classList.remove('hide');
-      // auto dismiss
-      setTimeout(()=>{
-        t.classList.add('hide');
-        setTimeout(()=>{ t.style.display='none'; }, 250);
-      }, 4000);
+      setTimeout(()=>{ t.classList.add('hide'); setTimeout(()=>{ t.style.display='none'; }, 250); }, 4000);
     }
 
     document.getElementById('submitRSVP').addEventListener('click', async () => {
-      const name = (new URLSearchParams(location.search).get('to') || 'there').trim();
-      if (!selected) {
-        showToast('Please pick an option first 🙂', '🤗');
-        return;
-      }
-      try { if (window.__logRSVP) await window.__logRSVP(selected); } catch(e){}
-      document.getElementById('rsvpRecorded').style.display = 'block';
+      const qs = new URLSearchParams(location.search);
+      const name = (qs.get('to') || '').trim();
+      if (!selected) { showToast('Please pick an RSVP option first 🙂', '🤗'); return; }
+      if (!name) { showToast('This link is missing your name. Please use your personal invite link.', '🔒'); return; }
 
-      if (selected === 'YES') {
-        showToast(`Yay! I can’t wait to see you, ${name}!`, '🎉');
-      } else if (selected === 'NO') {
-        showToast(`Thanks for letting me know, ${name}. I’ll miss you!`, '💌');
-      } else {
-        showToast(`That’s okay, ${name} — just tell me when you can!`, '🤗');
+      const allergyField = document.getElementById('allergyField');
+      if (!allergyField.value.trim()){
+        allergyField.value = 'None';
+      }
+
+      try {
+        if (window.__submitRSVPValidated) {
+          await window.__submitRSVPValidated(selected);
+        }
+        document.getElementById('rsvpRecorded').style.display = 'block';
+        if (selected === 'YES') { showToast(`Yay! I can’t wait to see you, ${name}!`, '🎉'); }
+        else if (selected === 'NO') { showToast(`Thanks for letting me know, ${name}. I’ll miss you!`, '💌'); }
+        else { showToast(`That’s okay, ${name} — just tell me when you can!`, '🤗'); }
+      } catch (e) {
+        showToast(e?.message || 'Please complete RSVP & allergies first.', '⚠️');
       }
     });
   </script>
-
-
-
-<script>
-  // ---- Audio-first background music with YouTube fallback ----
-  (function(){
-    const btn = document.getElementById('musicBtn');
-    const audio = document.getElementById('bgm');
-    let unmuted = false;
-
-    function fadeAudio(from, to, ms){
-      if (!audio) return;
-      const steps = 12, dt = ms/steps, dv = (to-from)/steps;
-      let v = from; audio.volume = Math.max(0, Math.min(1, v));
-      const t = setInterval(()=>{
-        v += dv; audio.volume = Math.max(0, Math.min(1, v));
-        if ((dv>0 && v>=to) || (dv<0 && v<=to)) clearInterval(t);
-      }, dt);
-    }
-
-    async function safePlay(a){
-      try { await a.play(); } catch(e){ /* ignored until gesture */ }
-    }
-
-    // Start muted (policy-friendly) and try to pre-play
-    if (audio) {
-      audio.muted = true; audio.volume = 0.0;
-      safePlay(audio);
-    }
-
-    // First interaction anywhere -> unmute + fade + toast
-    const resume = async () => {
-      if (unmuted || !audio) return;
-      unmuted = true;
-      audio.muted = false;
-      await safePlay(audio);
-      fadeAudio(0.0, 0.7, 500);
-      btn.textContent = '🔇 mute';
-      try { if (typeof showToast==='function') showToast('Now playing music!', '🎶'); } catch(e){}
-      window.removeEventListener('pointerdown', resume, {once:true});
-      window.removeEventListener('touchstart', resume, {once:true});
-      window.removeEventListener('scroll', resume, {once:true});
-    };
-    window.addEventListener('pointerdown', resume, { once:true, passive:true });
-    window.addEventListener('touchstart', resume, { once:true, passive:true });
-    window.addEventListener('scroll', resume, { once:true, passive:true });
-
-    // Toggle button
-    if (btn && audio){
-      btn.addEventListener('click', async () => {
-        if (audio.muted || audio.volume === 0){
-          audio.muted = false; await safePlay(audio); fadeAudio(0.0, 0.7, 300);
-          btn.textContent = '🔇 mute';
-        } else {
-          fadeAudio(audio.volume, 0.0, 200);
-          setTimeout(()=>{ audio.muted = true; }, 220);
-          btn.textContent = '🎵 sound on';
-        }
-      });
-    }
-
-    // If audio fails to load (404/CORS), fall back to YouTube init (already on page)
-    if (audio) {
-      audio.addEventListener('error', ()=>{
-        if (typeof onYouTubeIframeAPIReady === 'function') {
-          try { onYouTubeIframeAPIReady(); } catch(e){}
-        }
-      });
-    }
-  })();
-</script>
-
 </body>
 </html>
