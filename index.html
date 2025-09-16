@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>🎉 See You at the Party!</title>
+  <meta name="theme-color" content="#FFD166" />
+  <style>
+    :root{
+      --ink:#222; --muted:#6b7280; --card:#fff; --border:#e5e7eb;
+      --sun:#FFD166; --rose:#FF7BAC; --sky:#8EC5FF; --mint:#8FF5C2; --lav:#C6B6FF;
+      --shadow:0 20px 50px rgba(0,0,0,.10);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      color:var(--ink);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(1200px 600px at -10% -10%, #fff6f8 0, #fff 60%),
+        radial-gradient(900px 520px at 110% 0%, #f0fbff 0, #fff 55%),
+        linear-gradient(180deg,#fff,#f7fbff);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+    .container{max-width:980px;margin:0 auto;padding:18px 16px 120px;position:relative;z-index:1}
+    .hero{ background: linear-gradient(135deg, #fff0f6 0%, #f0fff7 100%); border-radius:28px; padding:28px 18px 22px; text-align:center; box-shadow:var(--shadow); }
+    .hero h1{margin:4px 0 10px; font-size:clamp(1.7rem, 3.8vw, 2.5rem); line-height:1.16;}
+    .tagline{margin:0 auto 12px; max-width:48ch; font-size:1.08rem}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px;margin-top:16px}
+    @media (min-width:860px){ .grid{ grid-template-columns: 1.2fr .9fr; } }
+    .card{background:var(--card); border-radius:var(--radius); padding:18px; box-shadow:var(--shadow)}
+    .card h2{margin:0 0 12px; font-size:1.18rem}
+    .kv{display:grid; grid-template-columns:120px 1fr; gap:10px; margin:8px 0; font-size:1.02rem}
+    .kv .k{color:var(--muted)}
+    .countdown{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin-top:10px}
+    .cd-seg{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;min-width:86px;text-align:center;box-shadow:var(--shadow)}
+    .cd-num{font-weight:900;font-size:1.5rem}
+    .cd-label{display:block;font-size:.8rem;color:var(--muted);margin-top:2px}
+    .attend{margin-top:12px}
+    .attend .summary{display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#7b7bff,#b3a5ff);color:#fff;border-radius:16px;padding:12px 14px;font-weight:800;box-shadow:0 10px 30px rgba(115,105,230,.3)}
+    .attend .list{background:#fff;border:1px solid var(--border);border-radius:14px;padding:12px;margin-top:8px;display:flex;flex-wrap:wrap;gap:8px}
+    .pill{padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:#f9fafb}
+    .caption{color:var(--muted);margin:8px 0 0;text-align:center}
+    /* Balloons */
+    .balloon{position:absolute;width:50px;height:70px;border-radius:50% 50% 45% 45%;opacity:.85;filter:drop-shadow(0 18px 40px rgba(0,0,0,.15));animation:float var(--dur,12s) linear infinite;z-index:0}
+    .balloon:after{content:"";position:absolute;left:50%;top:65px;width:2px;height:16px;background:#9CA3AF;transform:translateX(-50%)}
+    .b1{background:var(--sun);left:5vw;--dur:13s;animation-delay:-2s}
+    .b2{background:var(--rose);left:20vw;--dur:11s;animation-delay:-4s}
+    .b3{background:var(--sky);left:35vw;--dur:14s;animation-delay:-1s}
+    .b4{background:var(--mint);left:55vw;--dur:12s;animation-delay:-3s}
+    .b5{background:var(--lav);left:75vw;--dur:15s;animation-delay:-5s}
+    @keyframes float{
+      0% { transform: translateY(20vh) rotate(1deg); }
+      50%{ transform: translateY(-20vh) rotate(-1deg); }
+      100%{ transform: translateY(20vh) rotate(1deg); }
+    }
+    /* Confetti canvas sits behind content */
+    #confetti{position:fixed;inset:0;pointer-events:none;z-index:0}
+    footer{margin-top:14px;text-align:center;color:var(--muted)}
+
+    .span2{grid-column:1/-1}
+    .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+    .btn{appearance:none;border:1px solid var(--border);background:#fff;border-radius:999px;padding:10px 14px;font-weight:700;box-shadow:var(--shadow);text-decoration:none;color:var(--ink)}
+    .btn:hover{transform:translateY(-1px);}
+    .mapwrap{border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:var(--shadow)}
+
+
+    /* === Attendee Animations === */
+    @media (prefers-reduced-motion: no-preference){
+      .pill{position:relative; will-change: transform, opacity;}
+      .pill.enter{
+        animation: pillIn 600ms cubic-bezier(.2,.9,.2,1) both;
+      }
+      .pill.jump{
+        animation: pillJump 800ms cubic-bezier(.2,.9,.2,1);
+      }
+      .pill:hover{
+        animation: pillWiggle 700ms ease-in-out;
+      }
+      .pill.sparkle::after{
+        content:""; position:absolute; inset:-2px;
+        background: conic-gradient(from 0deg, #fff0, #fff9 10%, #fff0 20%);
+        -webkit-mask: radial-gradient(12px 12px at var(--sx,50%) var(--sy,50%), #000 35%, transparent 40%);
+        mask: radial-gradient(12px 12px at var(--sx,50%) var(--sy,50%), #000 35%, transparent 40%);
+        animation: sparkle 700ms linear;
+        pointer-events:none;
+      }
+      @keyframes pillIn{
+        from{ opacity:0; transform: translateY(8px) scale(.96); filter: blur(2px); }
+        to{   opacity:1; transform: translateY(0) scale(1); filter: blur(0); }
+      }
+      @keyframes pillJump{
+        0%{ transform: translateY(0) }
+        30%{ transform: translateY(-10px) rotate(-1.5deg) }
+        55%{ transform: translateY(0) rotate(0) }
+        75%{ transform: translateY(-4px) rotate(1deg) }
+        100%{ transform: translateY(0) }
+      }
+      @keyframes pillWiggle{
+        0%,100%{ transform: rotate(0) }
+        25%{ transform: rotate(-2deg) }
+        50%{ transform: rotate(2deg) }
+        75%{ transform: rotate(-1deg) }
+      }
+      @keyframes sparkle{
+        0%{opacity:.8; transform: scale(.9) rotate(0deg)}
+        100%{opacity:0; transform: scale(1.3) rotate(300deg)}
+      }
+    }
+
+
+    /* === Star-shaped attendee pills === */
+    .star{
+      display:inline-block;
+      position:relative;
+      width:90px;height:90px;
+      clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+      background:linear-gradient(135deg,#ff66cc,#ffcc00,#66ffcc,#6699ff,#cc66ff);
+      background-size:300% 300%;
+      animation:starBG 4s linear infinite, starPulse 3s ease-in-out infinite;
+      color:#fff;
+      font-weight:800;
+      font-size:.75rem;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      padding:6px;
+      box-shadow:0 6px 20px rgba(0,0,0,.2);
+    }
+    .star.enter{animation: starIn .6s ease both, starBG 4s linear infinite, starPulse 3s ease-in-out infinite;}
+    @keyframes starIn{from{transform:scale(.5) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+    @keyframes starBG{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    @keyframes starPulse{
+      0%,100%{transform:scale(1)}
+      50%{transform:scale(1.1)}
+    }
+    .star.jump{animation: starJump 0.9s ease both, starBG 4s linear infinite, starPulse 3s ease-in-out infinite;}
+    @keyframes starJump{
+      0%{transform:translateY(0) scale(1)}
+      30%{transform:translateY(-18px) scale(1.1)}
+      60%{transform:translateY(0) scale(0.95)}
+      100%{transform:translateY(0) scale(1)}
+    }
+
+  </style>
+</head>
+<body>
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="balloon b1"></div>
+  <div class="balloon b2"></div>
+  <div class="balloon b3"></div>
+  <div class="balloon b4"></div>
+  <div class="balloon b5"></div>
+
+  <div class="container">
+    <section class="hero" aria-labelledby="title">
+      <h1 id="title">🥳 I’m looking forward to seeing everyone at my party!</h1>
+      <p class="tagline">Invite is closed now, but here's the plan and the final guest list. Can’t wait! 💖</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Event Details</h2>
+        <div class="kv"><div class="k">Date</div><div>Saturday, <strong>20 September 2025</strong></div></div>
+        <div class="kv"><div class="k">Time</div><div><strong>14:00–15:00</strong> (soft play) — snacks & cake after</div></div>
+        <div class="kv"><div class="k">Venue</div><div><strong>Swiss Cottage Leisure Centre</strong><br/>Adelaide Rd, London NW3 3NF</div></div>
+
+        <div class="card" style="margin-top:12px;padding:12px">
+          <h3 style="margin:0 0 8px;font-size:1.05rem">⏳ Party starts in</h3>
+          <div class="countdown" aria-live="polite">
+            <div class="cd-seg"><span id="cdDays" class="cd-num">--</span><span class="cd-label">days</span></div>
+            <div class="cd-seg"><span id="cdHours" class="cd-num">--</span><span class="cd-label">hours</span></div>
+            <div class="cd-seg"><span id="cdMins" class="cd-num">--</span><span class="cd-label">mins</span></div>
+            <div class="cd-seg"><span id="cdSecs" class="cd-num">--</span><span class="cd-label">secs</span></div>
+          </div>
+          <p id="countdownMsg" class="caption"></p>
+        </div>
+      </div>
+
+      <aside class="card attend">
+        <div class="summary">
+          <span>Stars of the day</span>
+          <span><span id="attendingCount">0</span> coming</span>
+        </div>
+        <div class="list" id="attendingList" aria-live="polite"></div>
+        <p class="caption">Updates live from RSVPs marked “Yes”.</p>
+      </aside>
+    
+      <div class="card span2">
+        <h2>Location & Getting There</h2>
+        <div class="mapwrap"><iframe title="Map to Swiss Cottage Leisure Centre" width="100%" height="340" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://www.openstreetmap.org/export/embed.html?bbox=-0.18380000000000002%2C51.5337%2C-0.1638%2C51.5537&layer=mapnik&marker=51.5437%2C-0.1738"></iframe></div>
+        <div class="btns">
+          <a class="btn" href="https://www.google.com/maps/dir/?api=1&destination=Swiss+Cottage+Leisure+Centre+NW3+3NF" target="_blank" rel="noopener">Open in Google Maps</a>
+          <a class="btn" href="http://maps.apple.com/?daddr=Swiss+Cottage+Leisure+Centre+NW3+3NF&dirflg=d" target="_blank" rel="noopener">Open in Apple Maps</a>
+          <a class="btn" href="sandbox:/mnt/data/party-invite.ics" download>📅 Add to Calendar (.ics)</a>
+        </div>
+        <p class="caption">Venue: Swiss Cottage Leisure Centre, Adelaide Rd, London NW3 3NF</p>
+      </div>
+
+    </section>
+
+    <footer>Ohana means family — see you there! 💙</footer>
+  </div>
+
+  <!-- Firebase (for live attendee list) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDtC4RvoYxotfxDyp32gjeFediehdaWrLs",
+      authDomain: "cali-s-birthday.firebaseapp.com",
+      projectId: "cali-s-birthday",
+      storageBucket: "cali-s-birthday.firebasestorage.app",
+      messagingSenderId: "68111770262",
+      appId: "1:68111770262:web:fe550fad91db7d409bd8b7",
+      measurementId: "G-50S5Y76DMQ"
+    };
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const attendingCountEl = document.getElementById("attendingCount");
+    const attendingList = document.getElementById("attendingList");
+
+    
+    
+    function renderAttending(names){
+      const prevCount = Number(attendingCountEl.textContent || 0);
+      attendingCountEl.textContent = names.length.toString();
+      attendingList.innerHTML = "";
+      const frag = document.createDocumentFragment();
+      names.forEach((n, idx)=>{
+        const span = document.createElement("div");
+        span.className = "star enter";
+        span.style.animationDelay = (idx*60) + "ms";
+        span.textContent = n;
+        frag.appendChild(span);
+      });
+      attendingList.appendChild(frag);
+      if (names.length > prevCount && typeof burstConfetti==='function'){
+        burstConfetti();
+      }
+    }
+    setInterval(()=>{
+      const stars = Array.from(attendingList.querySelectorAll('.star'));
+      if (!stars.length) return;
+      const pick = stars[Math.floor(Math.random()*stars.length)];
+      pick.classList.add('jump');
+      pick.addEventListener('animationend', ()=>pick.classList.remove('jump'), {once:true});
+    }, 1600);
+
+
+
+    const qR = query(collection(db, "rsvps"), orderBy("ts","desc"));
+    onSnapshot(qR, (snap)=>{
+      const set = new Set();
+      snap.docs.forEach(d=>{
+        const r = d.data() || {};
+        const name = String(r.to||"").trim();
+        const choice = String(r.choice||"").toLowerCase();
+        if (name && name !== "(unknown)" && choice === "yes"){
+          set.add(name);
+        }
+      });
+      const names = Array.from(set).sort((a,b)=>a.localeCompare(b));
+      renderAttending(names);
+    });
+  </script>
+
+  <!-- Countdown + Confetti (no dependencies) -->
+  <script>
+    // ==== Countdown ====
+    const EVENT_START = new Date('2025-09-20T14:00:00+01:00'); // London time
+    const cdDays  = document.getElementById('cdDays');
+    const cdHours = document.getElementById('cdHours');
+    const cdMins  = document.getElementById('cdMins');
+    const cdSecs  = document.getElementById('cdSecs');
+    const cdMsg   = document.getElementById('countdownMsg');
+
+    function updateCountdown(){
+      const now = new Date();
+      let diff = Math.floor((EVENT_START - now)/1000);
+      if (diff <= 0){
+        cdMsg.textContent = '🎉 It’s party time!';
+        cdDays.textContent = cdHours.textContent = cdMins.textContent = cdSecs.textContent = '00';
+        burstConfetti(); // celebrate when timer hits zero if the page is open
+        clearInterval(timer);
+        return;
+      }
+      const d = Math.floor(diff / 86400); diff -= d*86400;
+      const h = Math.floor(diff / 3600);  diff -= h*3600;
+      const m = Math.floor(diff / 60);    diff -= m*60;
+      const s = diff;
+      cdDays.textContent  = String(d).padStart(2,'0');
+      cdHours.textContent = String(h).padStart(2,'0');
+      cdMins.textContent  = String(m).padStart(2,'0');
+      cdSecs.textContent  = String(s).padStart(2,'0');
+      cdMsg.textContent = '';
+    }
+    updateCountdown();
+    const timer = setInterval(updateCountdown, 1000);
+
+    // ==== Canvas Confetti ====
+    const cvs = document.getElementById('confetti');
+    const ctx = cvs.getContext('2d');
+    let W, H, confetti = [], raf;
+    function resize(){ W = cvs.width = innerWidth; H = cvs.height = innerHeight; }
+    addEventListener('resize', resize, {passive:true});
+    resize();
+
+    function spawn(n=160){
+      const colors = ['#FF7BAC','#8EC5FF','#8FF5C2','#FFD166','#C6B6FF','#FFCFD2','#BDE0FE','#CDEAC0'];
+      for(let i=0;i<n;i++){
+        confetti.push({
+          x: Math.random()*W,
+          y: -20 - Math.random()*H,
+          r: 5 + Math.random()*7,
+          tilt: Math.random()*10,
+          tiltSpeed: (Math.random()*1.5)+.2,
+          fall: 1 + Math.random()*3,
+          spin: Math.random()*6.28,
+          color: colors[(Math.random()*colors.length)|0]
+        });
+      }
+    }
+    function draw(){
+      ctx.clearRect(0,0,W,H);
+      confetti.forEach(p=>{
+        p.y += p.fall;
+        p.tilt += p.tiltSpeed;
+        p.x += Math.sin(p.tilt) * 0.9;
+        p.spin += 0.03;
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.spin);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.4);
+        ctx.restore();
+      });
+      confetti = confetti.filter(p=>p.y < H+30);
+      raf = requestAnimationFrame(draw);
+    }
+    function burstConfetti(){
+      spawn(200);
+    }
+    // gentle looped sprinkle
+    setInterval(()=>spawn(30), 1400);
+    draw();
+  </script>
+
+<audio id="bgMusic" autoplay loop muted>
+  <source src="https://jumpshare.com/s/Z5BmlB5zIvjgX74z80bQ" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+
+<script>
+  // Unmute and play music on first user interaction
+  document.body.addEventListener("click", () => {
+    const music = document.getElementById("bgMusic");
+    music.muted = false;
+    music.play().catch(err => console.log("Autoplay prevented:", err));
+  }, { once: true });
+</script>
+
+</body>
+</html>
